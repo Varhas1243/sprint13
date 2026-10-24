@@ -87,7 +87,7 @@ def user_list(request):
 
     users = CustomUser.objects.all().order_by("id")
 
-    return render(request, "users/user_list.html", {
+    return render(request, "user/user_list.html", {
         "users": users
     })
 
@@ -99,6 +99,6 @@ def user_detail(request, user_id):
 
     library_user = get_object_or_404(CustomUser, pk=user_id)
 
-    return render(request, "users/user_detail.html", {
+    return render(request, "user/user_detail.html", {
         "library_user": library_user
     })
