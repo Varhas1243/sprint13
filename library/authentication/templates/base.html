@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Бібліотека{% endblock %}</title>
+</head>
+<body>
+    <h1>Інформаційна система бібліотеки</h1>
+
+    <nav>
+        {% if request.user.is_authenticated %}
+            <a href="{% url 'book_list' %}">Книги</a>
+            <a href="{% url 'my_orders' %}">Мої замовлення</a>
+
+            {% if request.user.role == 1 %}
+                <a href="{% url 'user_list' %}">Користувачі</a>
+                <a href="{% url 'author_list' %}">Автори</a>
+                <a href="{% url 'order_list' %}">Усі замовлення</a>
+            {% endif %}
+
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit">Вийти</button>
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}">Увійти</a>
+            <a href="{% url 'register' %}">Реєстрація</a>
+        {% endif %}
+    </nav>
+
+    <hr>
+
+    {% block content %}{% endblock %}
+</body>
+</html>

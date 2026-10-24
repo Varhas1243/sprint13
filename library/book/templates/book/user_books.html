@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Книги користувача{% endblock %}
+
+{% block content %}
+<h2>Книги користувача</h2>
+
+<p>Користувач: {{ library_user.first_name }} {{ library_user.last_name }}</p>
+<p>Email: {{ library_user.email }}</p>
+
+<table>
+    <tr>
+        <th>Книга</th>
+        <th>Дата видачі</th>
+        <th>Запланована дата повернення</th>
+    </tr>
+
+    {% for order in orders %}
+        <tr>
+            <td>{{ order.book.name }}</td>
+            <td>{{ order.created_at }}</td>
+            <td>{{ order.plated_end_at }}</td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="3">У користувача немає виданих книг</td>
+        </tr>
+    {% endfor %}
+</table>
+
+<p><a href="{% url 'user_list' %}">Назад до користувачів</a></p>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Книги{% endblock %}
+
+{% block content %}
+<h2>Список книг</h2>
+
+<form method="get">
+    <p>Назва книги:</p>
+    <input type="text" name="title" value="{{ title }}">
+
+    <p>Прізвище автора:</p>
+    <input type="text" name="author" value="{{ author }}">
+
+    <p><button type="submit">Шукати</button></p>
+</form>
+
+{% for book in books %}
+    <hr>
+
+    <h3>{{ book.name }}</h3>
+    <p>{{ book.description }}</p>
+
+    <p>Автори:</p>
+    {% for author_item in book.authors.all %}
+        <p>{{ author_item.name }} {{ author_item.surname }} {{ author_item.patronymic }}</p>
+    {% empty %}
+        <p>Авторів немає</p>
+    {% endfor %}
+
+    <p>Кількість примірників: {{ book.count }}</p>
+
+    <a href="{% url 'book_detail' book.id %}">Детальніше</a>
+    |
+    <a href="{% url 'create_order' %}">Замовити книгу</a>
+{% empty %}
+    <p>Книг не знайдено</p>
+{% endfor %}
+{% endblock %}

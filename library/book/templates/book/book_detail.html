@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Інформація про книгу{% endblock %}
+
+{% block content %}
+<h2>{{ book.name }}</h2>
+
+<p>Опис: {{ book.description }}</p>
+<p>Кількість примірників: {{ book.count }}</p>
+
+<h3>Автори</h3>
+
+{% for author_item in book.authors.all %}
+    <p>{{ author_item.name }} {{ author_item.surname }} {{ author_item.patronymic }}</p>
+{% empty %}
+    <p>Авторів немає</p>
+{% endfor %}
+
+<p><a href="{% url 'create_order' %}">Замовити книгу</a></p>
+<p><a href="{% url 'book_list' %}">Назад до списку книг</a></p>
+{% endblock %}

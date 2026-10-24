@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Користувач{% endblock %}
+
+{% block content %}
+<h2>Інформація про користувача</h2>
+
+<p>ID: {{ library_user.id }}</p>
+<p>Ім'я: {{ library_user.first_name }}</p>
+<p>Прізвище: {{ library_user.last_name }}</p>
+<p>По батькові: {{ library_user.middle_name }}</p>
+<p>Email: {{ library_user.email }}</p>
+<p>Роль: {{ library_user.get_role_name }}</p>
+<p>Дата реєстрації: {{ library_user.created_at }}</p>
+
+<p>
+    <a href="{% url 'user_books' library_user.id %}">Переглянути видані книги</a>
+</p>
+
+<p><a href="{% url 'user_list' %}">Назад до користувачів</a></p>
+{% endblock %}

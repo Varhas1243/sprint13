@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Користувачі{% endblock %}
+
+{% block content %}
+<h2>Список користувачів</h2>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Ім'я</th>
+        <th>Прізвище</th>
+        <th>Email</th>
+        <th>Роль</th>
+        <th>Дії</th>
+    </tr>
+
+    {% for library_user in users %}
+        <tr>
+            <td>{{ library_user.id }}</td>
+            <td>{{ library_user.first_name }}</td>
+            <td>{{ library_user.last_name }}</td>
+            <td>{{ library_user.email }}</td>
+            <td>{{ library_user.get_role_name }}</td>
+            <td>
+                <a href="{% url 'user_detail' library_user.id %}">Детальніше</a>
+                |
+                <a href="{% url 'user_books' library_user.id %}">Видані книги</a>
+            </td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="6">Користувачів немає</td>
+        </tr>
+    {% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Автори{% endblock %}
+
+{% block content %}
+<h2>Список авторів</h2>
+
+{% if error %}
+    <p>{{ error }}</p>
+{% endif %}
+
+<p><a href="{% url 'author_create' %}">Додати автора</a></p>
+
+{% for author_item in authors %}
+    <hr>
+
+    <h3>{{ author_item.name }} {{ author_item.surname }} {{ author_item.patronymic }}</h3>
+
+    <p>Книги автора:</p>
+
+    {% for book in author_item.books.all %}
+        <p>{{ book.name }}</p>
+    {% empty %}
+        <p>У автора немає книг</p>
+    {% endfor %}
+
+    {% if not author_item.books.exists %}
+        <form method="post" action="{% url 'author_delete' author_item.id %}">
+            {% csrf_token %}
+            <button type="submit">Видалити автора</button>
+        </form>
+    {% endif %}
+{% empty %}
+    <p>Авторів немає</p>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Замовлення книги{% endblock %}
+
+{% block content %}
+<h2>Замовлення книги</h2>
+
+{% if error %}
+    <p>{{ error }}</p>
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+
+    <p>Виберіть книгу:</p>
+
+    <select name="book_id" required>
+        {% for book in books %}
+            <option value="{{ book.id }}">
+                {{ book.name }} (примірників: {{ book.count }})
+            </option>
+        {% empty %}
+            <option value="">Книг немає</option>
+        {% endfor %}
+    </select>
+
+    <p><button type="submit">Замовити</button></p>
+</form>
+
+<p><a href="{% url 'book_list' %}">Назад до книг</a></p>
+{% endblock %}
