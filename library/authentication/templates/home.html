@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Головна{% endblock %}
+
+{% block content %}
+<h2>Ласкаво просимо до бібліотеки</h2>
+
+{% if request.user.is_authenticated %}
+    <p>Ви увійшли як: {{ request.user.email }}</p>
+
+    <ul>
+        <li><a href="{% url 'book_list' %}">Переглянути книги</a></li>
+        <li><a href="{% url 'my_orders' %}">Мої замовлення</a></li>
+        {% if request.user.is_staff %}
+            <li><a href="/admin/">Адмін-панель</a></li>
+        {% endif %}
+    </ul>
+{% else %}
+    <p>Щоб користуватися бібліотекою, увійдіть або зареєструйтесь.</p>
+
+    <ul>
+        <li><a href="{% url 'login' %}">Увійти</a></li>
+        <li><a href="{% url 'register' %}">Реєстрація</a></li>
+    </ul>
+{% endif %}
+{% endblock %}

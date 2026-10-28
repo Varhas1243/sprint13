@@ -1,6 +1,7 @@
 import datetime
 
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 
 ROLE_CHOICES = (
@@ -35,6 +36,9 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True)
         extra_fields.setdefault('role', 1)
+        extra_fields.setdefault('first_name', 'Admin')
+        extra_fields.setdefault('middle_name', 'Admin')
+        extra_fields.setdefault('last_name', 'Admin')
 
         if extra_fields.get('is_staff') is not True:
             raise ValueError(('Superuser must have is_staff=True.'))
@@ -43,7 +47,7 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 
-class CustomUser(AbstractBaseUser):
+class CustomUser(AbstractBaseUser, PermissionsMixin):
     """
         This class represents a basic user. \n
         Attributes:
@@ -66,6 +70,8 @@ class CustomUser(AbstractBaseUser):
         type updated_at: int (choices)
         param is_active: user role, default value False
         type updated_at: bool
+        param is_staff: access to the admin panel, default value False
+        type is_staff: bool
     """
     first_name = models.CharField(max_length=20, default=None)
     last_name = models.CharField(max_length=20, default=None)
@@ -76,6 +82,7 @@ class CustomUser(AbstractBaseUser):
     updated_at = models.DateTimeField(auto_now=datetime.datetime.now())
     role = models.IntegerField(choices=ROLE_CHOICES, default=0)
     is_active = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
     id = models.AutoField(primary_key=True)
 
     USERNAME_FIELD = 'email'
