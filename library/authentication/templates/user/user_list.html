@@ -26,6 +26,8 @@
                 <a href="{% url 'user_detail' library_user.id %}">Детальніше</a>
                 |
                 <a href="{% url 'user_books' library_user.id %}">Видані книги</a>
+                |
+                <a href="{% url 'user_update' library_user.id %}">Редагувати</a>
             </td>
         </tr>
     {% empty %}

@@ -24,6 +24,8 @@
         <p>У автора немає книг</p>
     {% endfor %}
 
+    <p><a href="{% url 'author_update' author_item.id %}">Редагувати автора</a></p>
+
     {% if not author_item.books.exists %}
         <form method="post" action="{% url 'author_delete' author_item.id %}">
             {% csrf_token %}

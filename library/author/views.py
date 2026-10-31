@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 
+from .forms import AuthorForm
 from .models import Author
 
 
@@ -24,32 +25,43 @@ def author_create(request):
         raise PermissionDenied
 
     if request.method == "POST":
-        name = request.POST.get("name", "").strip()
-        surname = request.POST.get("surname", "").strip()
-        patronymic = request.POST.get("patronymic", "").strip()
+        form = AuthorForm(request.POST)
 
-        if not all([name, surname, patronymic]):
-            return render(request, "author/author_create.html", {
-                "error": "Заповніть усі поля"
-            })
+        if form.is_valid():
+            form.save()
+            return redirect("author_list")
+    else:
+        form = AuthorForm()
 
-        if any(
-            len(value) > 20
-            for value in [name, surname, patronymic]
-        ):
-            return render(request, "author/author_create.html", {
-                "error": "Максимальна довжина кожного поля — 20 символів"
-            })
+    return render(request, "author/author_form.html", {
+        "form": form,
+        "page_title": "Додавання автора",
+        "submit_label": "Додати автора",
+    })
 
-        Author.objects.create(
-            name=name,
-            surname=surname,
-            patronymic=patronymic,
-        )
 
-        return redirect("author_list")
+@login_required
+def author_update(request, author_id):
+    if request.user.role != 1:
+        raise PermissionDenied
 
-    return render(request, "author/author_create.html")
+    author = get_object_or_404(Author, pk=author_id)
+
+    if request.method == "POST":
+        form = AuthorForm(request.POST, instance=author)
+
+        if form.is_valid():
+            form.save()
+            return redirect("author_list")
+    else:
+        form = AuthorForm(instance=author)
+
+    return render(request, "author/author_form.html", {
+        "form": form,
+        "author": author,
+        "page_title": "Редагування автора",
+        "submit_label": "Зберегти зміни",
+    })
 
 
 @login_required

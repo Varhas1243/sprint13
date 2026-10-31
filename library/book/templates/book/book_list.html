@@ -5,6 +5,10 @@
 {% block content %}
 <h2>Список книг</h2>
 
+{% if request.user.role == 1 %}
+    <p><a href="{% url 'book_create' %}">Додати книгу</a></p>
+{% endif %}
+
 <form method="get">
     <p>Назва книги:</p>
     <input type="text" name="title" value="{{ title }}">
@@ -32,7 +36,11 @@
 
     <a href="{% url 'book_detail' book.id %}">Детальніше</a>
     |
-    <a href="{% url 'create_order' %}">Замовити книгу</a>
+    <a href="{% url 'create_order' %}?book={{ book.id }}">Замовити книгу</a>
+    {% if request.user.role == 1 %}
+        |
+        <a href="{% url 'book_update' book.id %}">Редагувати</a>
+    {% endif %}
 {% empty %}
     <p>Книг не знайдено</p>
 {% endfor %}

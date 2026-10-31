@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<h2>{{ page_title }}</h2>
+
+<form method="post" novalidate>
+    {% csrf_token %}
+
+    {{ form.non_field_errors }}
+    {{ form.as_p }}
+
+    <p><button type="submit">{{ submit_label }}</button></p>
+</form>
+
+<p><a href="{% url 'author_list' %}">Назад до авторів</a></p>
+{% endblock %}

@@ -26,6 +26,7 @@
             <td>{{ order.end_at|default:"Не повернуто" }}</td>
             <td>
                 {% if not order.end_at %}
+                    <a href="{% url 'update_order' order.id %}">Редагувати</a>
                     <form method="post" action="{% url 'close_order' order.id %}">
                         {% csrf_token %}
                         <button type="submit">Закрити замовлення</button>

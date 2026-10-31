@@ -16,6 +16,9 @@
     <p>Авторів немає</p>
 {% endfor %}
 
-<p><a href="{% url 'create_order' %}">Замовити книгу</a></p>
+<p><a href="{% url 'create_order' %}?book={{ book.id }}">Замовити книгу</a></p>
+{% if request.user.role == 1 %}
+    <p><a href="{% url 'book_update' book.id %}">Редагувати книгу</a></p>
+{% endif %}
 <p><a href="{% url 'book_list' %}">Назад до списку книг</a></p>
 {% endblock %}

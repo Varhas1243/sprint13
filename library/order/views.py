@@ -6,8 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.utils import timezone
 
+from .forms import OrderCreateForm, OrderUpdateForm
 from .models import Order
-from book.models import Book
 
 
 @login_required
@@ -38,37 +38,49 @@ def my_orders(request):
 @login_required
 def create_order(request):
     if request.method == "POST":
-        book_id = request.POST.get("book_id")
+        form = OrderCreateForm(request.POST)
 
-        try:
-            book = Book.objects.get(pk=book_id)
-        except (Book.DoesNotExist, ValueError, TypeError):
-            return render(request, "order/create_order.html", {
-                "books": Book.objects.all(),
-                "error": "Книгу не знайдено",
-            })
+        if form.is_valid():
+            Order.objects.create(
+                user=request.user,
+                book=form.cleaned_data["book"],
+                plated_end_at=timezone.now() + timedelta(days=14),
+            )
 
-        active_orders = Order.objects.filter(
-            book=book,
-            end_at__isnull=True,
-        ).count()
-
-        if active_orders >= book.count:
-            return render(request, "order/create_order.html", {
-                "books": Book.objects.all(),
-                "error": "Немає доступних примірників цієї книги",
-            })
-
-        Order.objects.create(
-            user=request.user,
-            book=book,
-            plated_end_at=timezone.now() + timedelta(days=14),
-        )
-
-        return redirect("my_orders")
+            return redirect("my_orders")
+    else:
+        form = OrderCreateForm(initial={"book": request.GET.get("book")})
 
     return render(request, "order/create_order.html", {
-        "books": Book.objects.all()
+        "form": form
+    })
+
+
+@login_required
+def update_order(request, order_id):
+    if request.user.role != 1:
+        raise PermissionDenied
+
+    order = get_object_or_404(
+        Order.objects.select_related("user", "book"),
+        pk=order_id,
+    )
+
+    if order.end_at is not None:
+        raise PermissionDenied
+
+    if request.method == "POST":
+        form = OrderUpdateForm(request.POST, instance=order)
+
+        if form.is_valid():
+            form.save()
+            return redirect("order_list")
+    else:
+        form = OrderUpdateForm(instance=order)
+
+    return render(request, "order/order_form.html", {
+        "form": form,
+        "order": order,
     })
 
 

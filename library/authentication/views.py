@@ -4,49 +4,29 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 
+from .forms import RegisterForm, UserUpdateForm
 from .models import CustomUser
 
 
 def register_view(request):
     if request.method == "POST":
-        email = request.POST.get("email", "").strip()
-        password = request.POST.get("password", "")
-        first_name = request.POST.get("first_name", "").strip()
-        last_name = request.POST.get("last_name", "").strip()
-        middle_name = request.POST.get("middle_name", "").strip()
-        role = request.POST.get("role", "0")
+        form = RegisterForm(request.POST)
 
-        if not all([email, password, first_name, last_name, middle_name]):
-            return render(request, "authentication/register.html", {
-                "error": "Заповніть усі поля"
-            })
+        if form.is_valid():
+            user = form.save()
 
-        if CustomUser.objects.filter(email=email).exists():
-            return render(request, "authentication/register.html", {
-                "error": "Користувач із таким email вже існує"
-            })
+            login(
+                request,
+                user,
+                backend="django.contrib.auth.backends.ModelBackend",
+            )
+            return redirect("book_list")
+    else:
+        form = RegisterForm()
 
-        if role not in ("0", "1"):
-            role = "0"
-
-        user = CustomUser.objects.create_user(
-            email=email,
-            password=password,
-            first_name=first_name,
-            last_name=last_name,
-            middle_name=middle_name,
-            role=int(role),
-            is_active=True,
-        )
-
-        login(
-            request,
-            user,
-            backend="django.contrib.auth.backends.ModelBackend",
-        )
-        return redirect("book_list")
-
-    return render(request, "authentication/register.html")
+    return render(request, "authentication/register.html", {
+        "form": form
+    })
 
 
 def login_view(request):
@@ -101,4 +81,26 @@ def user_detail(request, user_id):
 
     return render(request, "user/user_detail.html", {
         "library_user": library_user
+    })
+
+
+@login_required
+def user_update(request, user_id):
+    if request.user.role != 1:
+        raise PermissionDenied
+
+    library_user = get_object_or_404(CustomUser, pk=user_id)
+
+    if request.method == "POST":
+        form = UserUpdateForm(request.POST, instance=library_user)
+
+        if form.is_valid():
+            form.save()
+            return redirect("user_detail", user_id=library_user.id)
+    else:
+        form = UserUpdateForm(instance=library_user)
+
+    return render(request, "user/user_form.html", {
+        "form": form,
+        "library_user": library_user,
     })

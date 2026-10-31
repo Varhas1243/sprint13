@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<h2>{{ page_title }}</h2>
+
+<form method="post" novalidate>
+    {% csrf_token %}
+
+    {{ form.non_field_errors }}
+    {{ form.as_p }}
+
+    <p><button type="submit">{{ submit_label }}</button></p>
+</form>
+
+{% if book %}
+    <p><a href="{% url 'book_detail' book.id %}">Назад до книги</a></p>
+{% endif %}
+<p><a href="{% url 'book_list' %}">Назад до списку книг</a></p>
+{% endblock %}
