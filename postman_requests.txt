@@ -1,0 +1,132 @@
+POST http://127.0.0.1:8000/api/v1/user/
+{
+    "email": "olena@gmail.com",
+    "password": "12345",
+    "first_name": "Олена",
+    "last_name": "Коваленко",
+    "middle_name": "Андріївна",
+    "role": 0
+}
+
+GET http://127.0.0.1:8000/api/v1/user/
+
+GET http://127.0.0.1:8000/api/v1/user/10/
+
+PATCH http://127.0.0.1:8000/api/v1/user/10/
+{
+    "first_name": "Оленка"
+}
+
+PUT http://127.0.0.1:8000/api/v1/user/10/
+{
+    "email": "olena@gmail.com",
+    "password": "54321",
+    "first_name": "Олена",
+    "last_name": "Мельник",
+    "middle_name": "Андріївна",
+    "role": 0,
+    "is_active": true
+}
+
+POST http://127.0.0.1:8000/api/v1/book/
+{
+    "name": "Земля",
+    "description": "Повість про селянське життя",
+    "count": 4
+}
+
+GET http://127.0.0.1:8000/api/v1/book/
+
+GET http://127.0.0.1:8000/api/v1/book/7/
+
+PATCH http://127.0.0.1:8000/api/v1/book/7/
+{
+    "count": 8
+}
+
+PUT http://127.0.0.1:8000/api/v1/book/7/
+{
+    "name": "Земля (нове видання)",
+    "description": "Повість про селянське життя",
+    "count": 6,
+    "authors": []
+}
+
+POST http://127.0.0.1:8000/api/v1/author/
+{
+    "name": "Ольга",
+    "surname": "Кобилянська",
+    "patronymic": "Юліанівна",
+    "books": [7]
+}
+
+GET http://127.0.0.1:8000/api/v1/author/
+
+GET http://127.0.0.1:8000/api/v1/author/8/
+
+PATCH http://127.0.0.1:8000/api/v1/author/8/
+{
+    "patronymic": "Юліанівна (оновлено)"
+}
+
+PUT http://127.0.0.1:8000/api/v1/author/8/
+{
+    "name": "Ольга",
+    "surname": "Кобилянська",
+    "patronymic": "Юліанівна",
+    "books": [7]
+}
+
+POST http://127.0.0.1:8000/api/v1/order/
+{
+    "user": 10,
+    "book": 7
+}
+
+GET http://127.0.0.1:8000/api/v1/order/
+
+GET http://127.0.0.1:8000/api/v1/order/8/
+
+PATCH http://127.0.0.1:8000/api/v1/order/8/
+{
+    "end_at": "2026-11-10T12:00:00Z"
+}
+
+PUT http://127.0.0.1:8000/api/v1/order/8/
+{
+    "user": 10,
+    "book": 7,
+    "plated_end_at": "2026-12-01T12:00:00Z",
+    "end_at": null
+}
+
+POST http://127.0.0.1:8000/api/v1/user/10/order/
+{
+    "book": 7
+}
+
+GET http://127.0.0.1:8000/api/v1/user/10/order/
+
+GET http://127.0.0.1:8000/api/v1/user/10/order/9/
+
+PATCH http://127.0.0.1:8000/api/v1/user/10/order/9/
+{
+    "plated_end_at": "2026-12-15T12:00:00Z"
+}
+
+PUT http://127.0.0.1:8000/api/v1/user/10/order/9/
+{
+    "book": 7,
+    "plated_end_at": "2026-12-20T12:00:00Z",
+    "end_at": null
+}
+
+DELETE http://127.0.0.1:8000/api/v1/user/10/order/9/
+
+DELETE http://127.0.0.1:8000/api/v1/order/8/
+
+DELETE http://127.0.0.1:8000/api/v1/author/8/
+
+DELETE http://127.0.0.1:8000/api/v1/book/7/
+
+DELETE http://127.0.0.1:8000/api/v1/user/10/
